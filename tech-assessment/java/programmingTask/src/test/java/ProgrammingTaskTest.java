@@ -2,13 +2,51 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.*;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProgrammingTaskTest {
+
+    @Mock
+    private ProgrammingTask programmingTask;
+
+    @Test
+    @DisplayName("Verify methods are called")
+    public void testMainCallsThenVerify(){
+//      This isn't correct and I can't seem to reference the method from the mock - I am missing something.
+        var mine = mock(ProgrammingTask.class);
+        ProgrammingTask.main(new String[]{""});
+        verify(mine);
+    }
+
+    @Test
+    @DisplayName("Test that readFileAndGetIpAddressesAndUrls returns updates hashmaps")
+    public void testReadFileAndGetIpAddressesAndUrlsExceutes(){
+//        ToDo
+    }
+
+    @Test
+    @DisplayName("")
+    public void testReadFileAndGetIpAddressesAndUrlsThrowsIOException() throws IOException {
+//        This isn't working, I can't get it to mock correctly :(.
+//        doThrow(new IOException("error")).when(programmingTask).readFileAndGetIpAddressesAndUrls(any(), any(), any());
+    }
+
     @ParameterizedTest
     @CsvSource({"168.41.191.9, 1",
             "168.41.191.9 - - [72.44.32.10], 1",
@@ -16,9 +54,9 @@ public class ProgrammingTaskTest {
             "'', 0"})
     @DisplayName("Test that IP addresses are identified based on pattern and added to map")
     public void testExtractIpAddressesReturnsCorrectAddresses(String strLine, int noOfIpAddresses) {
-        HashMap<String, Integer> ipAddresses = new HashMap<>();
+        LinkedHashMap<String, Integer> ipAddresses = new LinkedHashMap<>();
 
-        HashMap<String, Integer> ipAddressMap = ProgrammingTask.extractIpAddresses(ipAddresses, strLine);
+        LinkedHashMap<String, Integer> ipAddressMap = ProgrammingTask.extractIpAddresses(ipAddresses, strLine);
 
         assertThat(ipAddressMap.size()).isEqualTo(noOfIpAddresses);
     }
@@ -31,9 +69,9 @@ public class ProgrammingTaskTest {
             "'', 0"})
     @DisplayName("Test that correct valid urls are added to map")
     public void testExtractUrlsReturnsCorrectUrls(String strLine, int noOfUrls) {
-        HashMap<String, Integer> urls = new HashMap<>();
+        LinkedHashMap<String, Integer> urls = new LinkedHashMap<>();
 
-        HashMap<String, Integer> urlMap = ProgrammingTask.extractUrls(urls, strLine);
+        LinkedHashMap<String, Integer> urlMap = ProgrammingTask.extractUrls(urls, strLine);
 
         assertThat(urlMap.size()).isEqualTo(noOfUrls);
     }
@@ -52,13 +90,15 @@ public class ProgrammingTaskTest {
 
         final Iterator<Integer> iterator = sortedMap.values().iterator();
 
-        assertThat(iterator.next()).isEqualTo(5);
-        assertThat(iterator.next()).isEqualTo(4);
-        assertThat(iterator.next()).isEqualTo(3);
-        assertThat(iterator.next()).isEqualTo(2);
-        assertThat(iterator.next()).isEqualTo(1);
+        assertAll (
+                () -> assertThat(iterator.next()).isEqualTo(5),
+                () -> assertThat(iterator.next()).isEqualTo(4),
+                () -> assertThat(iterator.next()).isEqualTo(3),
+                () -> assertThat(iterator.next()).isEqualTo(2),
+                () -> assertThat(iterator.next()).isEqualTo(1),
 
-        assertThat(sortedMap.size()).isEqualTo(5);
+                () -> assertThat(sortedMap.size()).isEqualTo(5)
+        );
     }
 
     @Test
@@ -73,10 +113,12 @@ public class ProgrammingTaskTest {
 
         List<String> topNResults = ProgrammingTask.getTopNResults(sortedMapDescending, 3);
 
-        assertThat(topNResults.get(0)).isEqualTo("five");
-        assertThat(topNResults.get(1)).isEqualTo("four");
-        assertThat(topNResults.get(2)).isEqualTo("three");
+        assertAll (
+                () -> assertThat(topNResults.get(0)).isEqualTo("five"),
+                () -> assertThat(topNResults.get(1)).isEqualTo("four"),
+                () -> assertThat(topNResults.get(2)).isEqualTo("three"),
 
-        assertThat(topNResults.size()).isEqualTo(3);
+                () -> assertThat(topNResults.size()).isEqualTo(3)
+        );
     }
 }
