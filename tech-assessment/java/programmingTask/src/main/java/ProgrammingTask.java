@@ -8,7 +8,7 @@ import static java.util.stream.Collectors.toMap;
 
 
 public class ProgrammingTask {
-    //Improvements: have the filename as an argument - just keeping it hardcoded for this impl.
+    //Improvements: have the filename as an argument - just keeping it hardcoded for this implementation.
     public static void main(String[] args) {
         String filename = "programming-task-example-data.log";
         LinkedHashMap<String, Integer> urls = new LinkedHashMap<>();
