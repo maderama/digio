@@ -8,12 +8,12 @@ import static java.util.stream.Collectors.toMap;
 
 
 public class ProgrammingTask {
+    private Reader reader;
     //Improvements: have the filename as an argument - just keeping it hardcoded for this implementation.
     public static void main(String[] args) {
-        String filename = "programming-task-example-data.log";
         LinkedHashMap<String, Integer> urls = new LinkedHashMap<>();
         LinkedHashMap<String, Integer> ipAddresses = new LinkedHashMap<>();
-        readFileAndGetIpAddressesAndUrls(filename, urls, ipAddresses);
+        readFileAndGetIpAddressesAndUrls(urls, ipAddresses);
 
         LinkedHashMap<String, Integer> sortedIpAddressesDescending = sortMapByValueDescending(ipAddresses);
         LinkedHashMap<String, Integer> sortedURLsDescending = sortMapByValueDescending(urls);
@@ -22,16 +22,15 @@ public class ProgrammingTask {
         System.out.println("Top 3 most active IP addresses = " + getTopNResults(sortedIpAddressesDescending, 3));
         System.out.println("Top 3 most active URLs = " + getTopNResults(sortedURLsDescending, 3));
     }
-
     //naming all good?
     //Single Responsibility Principal violation? Considered pulling out the readFile seperately and returning a BufferReader - then the while loop has to be moved into the main function. I think it's cleaner to do it like this,
     //but open to suggestions. Pulling it out made testing annoying.
     //Improvement / Variation: decoupling. Increase in performance time, but then could return the hashmaps individually and avoid having a void method.
-    public static void readFileAndGetIpAddressesAndUrls(String filename, LinkedHashMap<String, Integer> urls, LinkedHashMap<String, Integer> ipAddresses) {
+    public static void readFileAndGetIpAddressesAndUrls(LinkedHashMap<String, Integer> urls, LinkedHashMap<String, Integer> ipAddresses) {
         try {
-            FileInputStream fstream = new FileInputStream(filename);
+            Reader logFileReader = openLogFile();
             String strLine;
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fstream));
+            BufferedReader reader = new BufferedReader(logFileReader);
             while ((strLine = reader.readLine()) != null) {
                 extractUrls(urls, strLine);
                 extractIpAddresses(ipAddresses, strLine);
@@ -39,6 +38,10 @@ public class ProgrammingTask {
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
+    }
+
+    protected static Reader openLogFile() throws FileNotFoundException {
+        return new FileReader("programming-task-example-data.log");
     }
 
     public static LinkedHashMap<String, Integer> extractIpAddresses(LinkedHashMap<String, Integer>ipAddresses, String strLine) {
