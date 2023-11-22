@@ -16,38 +16,18 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProgrammingTaskTest {
-    @Mock
-    ProgrammingTask programmingTask;
-
     @Test
-    @DisplayName("Verify methods are called")
-    public void testMainCallsThenVerify(){
-//      This isn't correct and I can't seem to reference the method from the mock - I am missing something.
-//        var mine = mock(ProgrammingTask.class);
-//        programmingTask.main(new String[]{""});
-//        verify();
-    }
-
-    @Test
-    @DisplayName("test that no exception is thrown from method")
+    @DisplayName("test that no exception is thrown from readFileAndGetIpAddressesAndUrls")
     public void testReadFileAndGetIpAddressesAndUrlsDoesNotThrowException(){
         LinkedHashMap<String, Integer> urls = new LinkedHashMap<>();
         LinkedHashMap<String, Integer> ipAddresses = new LinkedHashMap<>();
 
-        programmingTask.readFileAndGetIpAddressesAndUrls(urls, ipAddresses);
+        ProgrammingTask.readFileAndGetIpAddressesAndUrls(urls, ipAddresses);
 
         assertDoesNotThrow(() -> ProgrammingTask.readFileAndGetIpAddressesAndUrls(urls, ipAddresses));
-    }
-
-    @Test
-    @DisplayName("")
-    public void testReadFileAndGetIpAddressesAndUrlsThrowsIOException() throws IOException {
-//        This isn't working, I can't get it to mock correctly :(.
-//        doThrow(new IOException("error")).when(programmingTask).readFileAndGetIpAddressesAndUrls(any(), any(), any());
     }
 
     @Test
@@ -56,29 +36,11 @@ public class ProgrammingTaskTest {
         LinkedHashMap<String, Integer> urls = new LinkedHashMap<>();
         LinkedHashMap<String, Integer> ipAddresses = new LinkedHashMap<>();
 
-        programmingTask.readFileAndGetIpAddressesAndUrls(urls, ipAddresses);
+        ProgrammingTask.readFileAndGetIpAddressesAndUrls(urls, ipAddresses);
 
         assertThat(urls.size()).isEqualTo(22);
         assertThat(ipAddresses.size()).isEqualTo(11);
     }
-
-//    @Test
-//    public void testOpenLogFileDoesNotThrowException() throws FileNotFoundException {
-//        LinkedHashMap<String, Integer> urls = new LinkedHashMap<>();
-//        LinkedHashMap<String, Integer> ipAddresses = new LinkedHashMap<>();
-//        ProgrammingTask.openLogFile();
-//
-//        assertDoesNotThrow(FileNotFoundException.class, ProgrammingTask.readFileAndGetIpAddressesAndUrls(urls, ipAddresses));
-//    }
-//
-//    @Test
-//    public void testOpenLogFileThrowsException() throws FileNotFoundException {
-//        doThrow(new FileNotFoundException()).when(ProgrammingTask.openLogFile());
-//
-//        ProgrammingTask.openLogFile();
-//
-//        assertThrows(FileNotFoundException.class, ProgrammingTask::openLogFile);
-//    }
 
     @ParameterizedTest
     @CsvSource({"168.41.191.9, 1",
@@ -89,7 +51,7 @@ public class ProgrammingTaskTest {
     public void testExtractIpAddressesReturnsCorrectAddresses(String strLine, int noOfIpAddresses) {
         LinkedHashMap<String, Integer> ipAddresses = new LinkedHashMap<>();
 
-        LinkedHashMap<String, Integer> ipAddressMap = programmingTask.extractIpAddresses(ipAddresses, strLine);
+        LinkedHashMap<String, Integer> ipAddressMap = ProgrammingTask.extractIpAddresses(ipAddresses, strLine);
 
         assertThat(ipAddressMap.size()).isEqualTo(noOfIpAddresses);
     }
@@ -104,7 +66,7 @@ public class ProgrammingTaskTest {
     public void testExtractUrlsReturnsCorrectUrls(String strLine, int noOfUrls) {
         LinkedHashMap<String, Integer> urls = new LinkedHashMap<>();
 
-        LinkedHashMap<String, Integer> urlMap = programmingTask.extractUrls(urls, strLine);
+        LinkedHashMap<String, Integer> urlMap = ProgrammingTask.extractUrls(urls, strLine);
 
         assertThat(urlMap.size()).isEqualTo(noOfUrls);
     }
@@ -119,7 +81,7 @@ public class ProgrammingTaskTest {
         unsortedMap.put("two", 2);
         unsortedMap.put("four", 4);
 
-        Map<String, Integer> sortedMap = programmingTask.sortMapByValueDescending(unsortedMap);
+        Map<String, Integer> sortedMap = ProgrammingTask.sortMapByValueDescending(unsortedMap);
 
         final Iterator<Integer> iterator = sortedMap.values().iterator();
 
@@ -144,7 +106,7 @@ public class ProgrammingTaskTest {
         sortedMapDescending.put("threeAdditional", 4);
         sortedMapDescending.put("two", 2);
 
-        List<String> topNResults = programmingTask.getTopNResults(sortedMapDescending, 3);
+        List<String> topNResults = ProgrammingTask.getTopNResults(sortedMapDescending, 3);
 
         assertAll (
                 () -> assertThat(topNResults.get(0)).isEqualTo("five"),
