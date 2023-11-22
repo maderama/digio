@@ -1,8 +1,8 @@
 # Ignore idea directory
-.idea/
+/.idea/
 
 # Ignore target directory
-target/
+/target/
 
 # Ignore .iml file extensions
 *.iml
